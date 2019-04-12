@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import it.magical.drawtool.grid.BackGrid;
-import it.magical.drawtool.Cursor;
 import it.magical.drawtool.inputprocessor.MagicalInputProcessor;
 import it.magical.drawtool.shapes.Shape;
 
@@ -24,6 +23,8 @@ public class DrawTool extends ApplicationAdapter
 
 	public static int pointID = 0;
 	public static DrawTool instance;
+	public static Shape currentShape;
+	private Helper h;
 
 	public static BackGrid getBackGrid()
 	{
@@ -44,6 +45,8 @@ public class DrawTool extends ApplicationAdapter
 		bg = new BackGrid();
 		cursor = new Cursor(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
 		instance = this;
+		this.h = new Helper();
+		Gdx.graphics.setTitle("DrawTool by MagicalMouse39");
 	}
 
 	@Override
@@ -53,6 +56,8 @@ public class DrawTool extends ApplicationAdapter
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
 		bg.onUpdate();
+		if (!h.died)
+			h.onUpdate();
 		cursor.onUpdate();
 		for (Point p : Point.points)
 			p.onUpdate();
@@ -88,7 +93,7 @@ public class DrawTool extends ApplicationAdapter
 		try
 		{
 			batch.begin();
-			font.setColor(Color.RED);
+			font.setColor(Color.CYAN);
 			font.draw(DrawTool.batch, text, x - gl.width / 2, y);
 			batch.end();
 		}
@@ -96,7 +101,7 @@ public class DrawTool extends ApplicationAdapter
 		{
 			batch.end();
 			batch.begin();
-			font.setColor(Color.RED);
+			font.setColor(Color.CYAN);
 			font.draw(DrawTool.batch, text, x - gl.width / 2, y);
 			batch.end();
 			batch.begin();

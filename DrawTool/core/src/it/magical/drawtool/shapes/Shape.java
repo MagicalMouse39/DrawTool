@@ -15,6 +15,7 @@ public class Shape
 	protected String name;
 	protected Point vertex;
 	protected ArrayList<Point> points;
+	public boolean splitted = false;
 
 	public Shape()
 	{
@@ -62,7 +63,9 @@ public class Shape
 	public void setHeight(float height) {
 		this.height = height;
 	}
-	
+
+	public void split() {}
+
 	public void onUpdate()
 	{
 		

@@ -6,8 +6,7 @@ import com.badlogic.gdx.InputProcessor;
 import it.magical.drawtool.DrawTool;
 import it.magical.drawtool.Point;
 import it.magical.drawtool.ai.MagicalAI;
-
-import java.util.ArrayList;
+import it.magical.drawtool.shapes.Shape;
 
 public class MagicalInputProcessor implements InputProcessor {
 	@Override
@@ -24,14 +23,16 @@ public class MagicalInputProcessor implements InputProcessor {
 					if (pp.x == p.x && pp.y == p.y)
 					{
 						pp.setLinkedTo(p);
-						DrawTool.instance.shapes.add(MagicalAI.processShape(Point.points));
+						Shape s = MagicalAI.processShape(Point.points);
+						DrawTool.instance.shapes.add(s);
+						DrawTool.currentShape = s;
 						clear = true;
 						DrawTool.pointID = 0;
 						add = false;
 					}
 			if (clear)
 				Point.points.clear();
-			System.out.println("ID: " + DrawTool.pointID);
+			//System.out.println("ID: " + DrawTool.pointID);
 			if (DrawTool.pointID != 0)
 				Point.getPointByID(DrawTool.pointID - 1).setLinkedTo(p);
 			if (add)
@@ -52,13 +53,25 @@ public class MagicalInputProcessor implements InputProcessor {
 				}
 			if (htr)
 				Point.points.remove(ptr);
+			return true;
 		}
 	return false;
 }
 
 @Override
-public boolean keyDown(int keycode) {
-	// TODO Auto-generated method stub
+public boolean keyDown(int keycode)
+{
+	if (keycode == Input.Keys.S)
+	{
+		DrawTool.currentShape.split();
+		return true;
+	}
+	else if (keycode == Input.Keys.C || keycode == Input.Keys.DEL || keycode == Input.Keys.BACKSPACE)
+	{
+		DrawTool.shapes.clear();
+		Point.points.clear();
+		return true;
+	}
 	return false;
 }
 

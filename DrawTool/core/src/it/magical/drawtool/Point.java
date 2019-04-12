@@ -13,7 +13,7 @@ public class Point
 	public float x, y;
 	public int id;
 	public Point linkedTo;
-	private boolean linked;
+	public boolean linked;
 	
 	public Point(float x, float y, int id)
 	{
@@ -59,7 +59,7 @@ public class Point
 		if (this.linked)
 			this.sr.rectLine(this.x, this.y, this.linkedTo.x, this.linkedTo.y, 3);
 		else
-			this.sr.rectLine(this.x, this.y, DrawTool.instance.getCursor().x, DrawTool.instance.getCursor().y, 3);
+			this.sr.rectLine(this.x, this.y, DrawTool.instance.getCursor().x + 5, DrawTool.instance.getCursor().y + 5, 3);
 		this.sr.end();
 	}
 }

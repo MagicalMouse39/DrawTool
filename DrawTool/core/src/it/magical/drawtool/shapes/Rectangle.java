@@ -10,18 +10,33 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import it.magical.drawtool.DrawTool;
 import it.magical.drawtool.Point;
 
+import javax.lang.model.type.ArrayType;
 import java.util.ArrayList;
 
 public class Rectangle extends Shape
 {
-	public Rectangle(ArrayList<Point> points)
+	public Point topLeft = null;
+	public Point bottomLeft = null;
+	public Point topRight = null;
+	public Point bottomRight = null;
+	public float base = 0f;
+
+	public Rectangle(ArrayList<Point> points, Point tl, Point bl, Point tr, Point br)
 	{
+		this.topLeft = tl;
+		this.bottomLeft = bl;
+		this.topRight = tr;
+		this.bottomRight = br;
 		this.sr = new ShapeRenderer();
 		this.font = new BitmapFont();
 		this.points = new ArrayList<Point>();
 		for (Point p : points)
 			this.points.add(p);
-		this.name = "Rectangle";
+		this.height = this.topLeft.y - this.bottomLeft.y;
+		this.base = this.bottomRight.x - this.bottomLeft.x;
+		this.area = this.base * this.height;
+		this.perimeter = this.base * 2 + this.height * 2;
+		this.name = "Rettangolo [Area: " + this.area + " | Perimetro: " + this.perimeter + "]";
 	}
 	
 	@Override
@@ -57,6 +72,35 @@ public class Rectangle extends Shape
 
 		float mid = l.x + (r.x - l.x) / 2;
 		float h20 = t.y + 20;
-		DrawTool.writeCentered(this.name, mid, h20);
+		DrawTool.writeCentered(this.name, mid, this.splitted ? this.bottomLeft.y - 20 : h20);
+	}
+
+	@Override
+	public void split()
+	{
+		Point splitTop = new Point(this.topLeft.x + (this.topRight.x - this.topLeft.x) / 2, this.topLeft.y, 21);
+		Point splitBottom = new Point(this.topLeft.x + (this.topRight.x - this.topLeft.x) / 2, this.bottomLeft.y, 22);
+
+		ArrayList<Point> points = new ArrayList<Point>();
+		points.add(this.topLeft);
+		points.add(this.bottomLeft);
+		points.add(splitBottom);
+		points.add(splitTop);
+
+		Rectangle r = new Rectangle(points, this.topLeft, this.bottomLeft, splitBottom, splitTop);
+
+		r.splitted = true;
+
+		DrawTool.shapes.add(r);
+
+		points.clear();
+		points.add(splitTop);
+		points.add(splitBottom);
+		points.add(this.bottomRight);
+		points.add(this.topRight);
+
+		DrawTool.shapes.add(new Rectangle(points, splitTop, splitBottom, this.bottomRight, this.topRight));
+		DrawTool.currentShape = r;
+		DrawTool.shapes.remove(this);
 	}
 }
